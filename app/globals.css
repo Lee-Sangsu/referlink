@@ -6,6 +6,8 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --modal-bg-color: #ffffff;
+  --bg-color: #F8F9FB;
 }
 
 @media (prefers-color-scheme: dark) {
