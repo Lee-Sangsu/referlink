@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { i18n } from '@/i18nConfig';
-import { match as matchLocale } from "@formatjs/intl-localematcher";
+import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
 
@@ -17,21 +17,23 @@ function getLocale(request: NextRequest): string | undefined {
       locales,
     );
   
-    const locale = matchLocale(languages, locales, i18n.defaultLocale);
+    const locale = match(languages, locales, i18n.defaultLocale);
   
     return locale;
   }
   export function middleware(request: NextRequest) {
-    const pathname = request.nextUrl.pathname;
-  
-    // `/_next/` and `/api/` are ignored by the watcher, but we need to ignore files in `public` manually.
-    if (
-      [
-        '/icons/*',
-        '/imgs/*',
-      ].includes(pathname)
-    )
-      return;
+    const { pathname } = request.nextUrl;
+    console.log("Current pathname:", pathname);
+
+    const pathnameHasLocale = i18n.locales.some(
+      (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
+    if (pathnameHasLocale) return;
+    if ([
+        '/icons',
+        '/imgs',
+    ].includes(pathname)) return;
+
   
     // Check if there is any supported locale in the pathname
     const pathnameIsMissingLocale = i18n.locales.every(
@@ -56,7 +58,7 @@ function getLocale(request: NextRequest): string | undefined {
   
  
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+    matcher: ["/((?!api|_next/static|_next/image).*)"],
 }
 
 
