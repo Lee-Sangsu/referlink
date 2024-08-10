@@ -1,7 +1,14 @@
 {
-    "server-component": {
-      "welcome": "Welcome"
-    },
+  "home-component": {
+    "welcome": "Welcome"
+  },
+  "header-component": {
+      "menu": {
+          "title": "Menu",
+          "menu1": "Blog",
+          "menu2": "Contact us"
+      }
+  },
     "counter": {
       "increment": "Increment",
       "decrement": "Decrement"

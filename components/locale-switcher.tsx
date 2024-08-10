@@ -15,7 +15,6 @@ export default function LocaleSwitcher() {
 
   return (
     <div>
-      <p>Locale switcher:</p>
       <ul>
         {i18n.locales.map((locale) => {
           return (

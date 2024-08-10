@@ -1,10 +1,16 @@
 {
-    "server-component": {
+    "home-component": {
       "welcome": "Welcome"
+    },
+    "header-component": {
+        "menu": {
+            "title": "메뉴",
+            "menu1": "블로그",
+            "menu2": "컨택 어스"
+        }
     },
     "counter": {
       "increment": "Increment",
       "decrement": "Decrement"
     }
   }
-  

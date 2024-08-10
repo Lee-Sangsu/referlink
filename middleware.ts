@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { i18n } from '@/i18nConfig';
+import { i18n, Locale } from '@/i18nConfig';
 import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
@@ -29,11 +29,15 @@ function getLocale(request: NextRequest): string | undefined {
       (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
     );
     if (pathnameHasLocale) return;
-    if ([
-        '/icons',
-        '/imgs',
-    ].includes(pathname)) return;
 
+    const segments = pathname.split('/');
+    const potentialLocale = segments[1] as Locale;
+    const pathWithoutLocale = i18n.locales.includes(potentialLocale) ? `/${segments.slice(2).join('/')}` : pathname;
+
+    // Check if the path is for static assets
+    if (pathWithoutLocale.startsWith('/icons') || pathWithoutLocale.startsWith('/imgs')) {
+      return;
+    }
   
     // Check if there is any supported locale in the pathname
     const pathnameIsMissingLocale = i18n.locales.every(
