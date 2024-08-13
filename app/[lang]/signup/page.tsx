@@ -2,18 +2,30 @@ import { getDictionary } from "@/components/get-dictionary";
 import LocaleSwitcher from "@/components/locale-switcher";
 import { Locale } from "@/i18nConfig";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 
-export default async function Home({
+export default async function FinishAuth({
     params: { lang }
 }: {params: { lang: Locale }}) {
     const dictionary = await getDictionary(lang);
+    const searchParams = useSearchParams();
+
+    const email = searchParams.get("email");
+
+    const isNewUser = true;
+
+    // const isNewUser = airtable.user.query(email) === empty or exists
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <header>
-          <LocaleSwitcher lang={lang} />
-            
-        </header>
+    <main className="flex min-h-screen w-screen flex-col items-center justify-between p-24">
+      {email && <div>Invalid Access</div>}
+      { isNewUser ? <div>
+        {"회원가입 동의 + 추가 정보 받기 -> airtable에 정보 넣어"}
+      </div>
+      : <div>
+        {"redirect to my profile or home."}
+      </div>
+      }
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
