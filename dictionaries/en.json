@@ -2,6 +2,7 @@
   "home-component": {
     "welcome": "Welcome"
   },
+  "locale": "English",
   "header-component": {
       "menu": {
           "title": "Menu",

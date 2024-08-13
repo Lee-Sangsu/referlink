@@ -37,7 +37,7 @@ export default async function Header({
             </div>
             
           </div> : <a className={} onClick={() => showSignContainer(true)}>Sign Up</a>} */}
-          <LocaleSwitcher />
+          <LocaleSwitcher lang={lang} />
 
           <AuthOnHeader />
         </div>
