@@ -1,6 +1,6 @@
 import Image from "next/image"
 import React from "react";
-import { EmailSignIn } from "@/components/auth/emailAuth";
+import { SendEmailSignIn } from "@/components/auth/emailAuth";
 
 const DefaultModal = ({children, isOpen, setIsOpen}: {children: React.ReactNode; isOpen: boolean; setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;}) => {
 
@@ -39,7 +39,7 @@ export function SignInModal ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: R
         
         <button
           className="w-[84%] bg-blue-500 text-white py-2 px-[8%] rounded-md hover:bg-blue-600 transition duration-300"
-          onClick={() => EmailSignIn(email)}> 이메일로 간편 로그인 </button>
+          onClick={() => SendEmailSignIn(email)}> 이메일로 간편 로그인 </button>
 
         <div className="mt-6 w-[84%]">
           <div className="relative">

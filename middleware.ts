@@ -23,22 +23,22 @@ function getLocale(request: NextRequest): string | undefined {
   }
   export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    console.log("Current pathname:", pathname);
-
+    
     const pathnameHasLocale = i18n.locales.some(
       (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
     );
     if (pathnameHasLocale) return;
-
+    
     const segments = pathname.split('/');
     const potentialLocale = segments[1] as Locale;
     const pathWithoutLocale = i18n.locales.includes(potentialLocale) ? `/${segments.slice(2).join('/')}` : pathname;
-
+    
     // Check if the path is for static assets
     if (pathWithoutLocale.startsWith('/icons') || pathWithoutLocale.startsWith('/imgs')) {
       return;
     }
-  
+    console.log("Current pathname:", pathname);
+    
     // Check if there is any supported locale in the pathname
     const pathnameIsMissingLocale = i18n.locales.every(
       (locale) =>

@@ -20,6 +20,7 @@ export default function LocaleSwitcher({lang}: {lang: Locale}) {
 
   return (
     <div className="relative inline-block text-left">
+      {/*  onMouseEnter={() => setSwitcherOpen(true)} onMouseLeave={() => setSwitcherOpen(false)} will make 'em annoyed */}
       <PrimaryButton onClick={toggleDropdown} innerText={lang === "ko" ? "한국어": "English"} />
       {isSwitcherOpen && (
         <ul className="absolute z-10 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
