@@ -76,7 +76,7 @@ export function SignInModal ({lang, isOpen, setIsOpen}: {lang: Locale, isOpen: b
         </div>
         
         {emailSent ? <button 
-          className="w-[84%] text-blue-500 bg-white py-2 px-[8%] rounded-md"
+          className="w-[84%] text-blue-500 bg-white py-2 px-[8%] rounded-md border border-blue-500"
           onClick={() => window.alert(textInModal["email-sent-alert"])}>{textInModal["email-sent-btn"]}</button> 
         : <button
           className="w-[84%] bg-blue-500 text-white py-2 px-[8%] rounded-md hover:bg-blue-600 transition duration-300"
