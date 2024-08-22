@@ -24,6 +24,10 @@ interface ReferralBox {
     },
     // ... add more referrals as needed
   ];
+
+export const metadata = {
+    title: 'Blog',
+}
   
 
 export default async function AllReferences({
@@ -36,7 +40,7 @@ export default async function AllReferences({
   return (
     <main className="flex min-h-screen w-screen flex-col items-center justify-between p-24">
         {session?.isAuth ? (<> 
-          <div className="flex w-[100%] justify-between items-center mb-6">
+          <div className="flex w-full justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-blue-600">내가 받은 평판</h1>
             <div className="flex items-center space-x-2">
                 <button className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium flex items-center">

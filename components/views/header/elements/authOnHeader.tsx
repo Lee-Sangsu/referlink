@@ -10,6 +10,6 @@ export function AuthOnHeader({lang}: {lang: Locale}) {
 
     return (<div> 
       <PrimaryButton onClick={() => setSignInContainer(true)} innerText={lang === "ko" ? "시작하기" : "Get Started"} />
-      <SignInModal isOpen={signInContainer} setIsOpen={setSignInContainer} />
+      <SignInModal lang={lang} isOpen={signInContainer} setIsOpen={setSignInContainer} />
     </div>)
 }
