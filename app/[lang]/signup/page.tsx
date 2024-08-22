@@ -3,22 +3,21 @@ import { emailSignIn } from "@/components/auth/emailAuth";
 import { getDictionary } from "@/components/get-dictionary";
 import { Locale } from "@/i18nConfig";
 import Image from "next/image";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import { createSession } from "../lib/session";
 
 
 export default async function FinishAuth({
-    params: { lang }
-}: {params: { lang: Locale }}) {
+    params: { lang },
+    searchParams
+}: {params: { lang: Locale }, searchParams:  { [key: string]: string | undefined }}) {
   const dictionary = await getDictionary(lang);
-  
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email = searchParams?.email;
 
   const signInInfo = await emailSignIn();
   
   async function setUserLoggedIn () {
-    await createSession(email!);
+    if (email) await createSession(email);
   };
 
 
