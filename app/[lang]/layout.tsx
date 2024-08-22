@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { i18n, type Locale } from "@/i18nConfig";
 import Header from "@/components/views/header/header";
+import { Footer } from "@/components/views/footer";
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className={noto.className}>
         <Header params={params} />
         {children}
+        <Footer />
       </body>
     </html>
   );

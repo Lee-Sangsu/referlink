@@ -6,63 +6,65 @@ import Negotiator from "negotiator";
 
 function getLocale(request: NextRequest): string | undefined {
     // Negotiator expects plain object so we need to transform headers
-    const negotiatorHeaders: Record<string, string> = {};
-    request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+  const negotiatorHeaders: Record<string, string> = {};
+  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+
+  // @ts-ignore locales are readonly
+  const locales: string[] = i18n.locales;
+
+  // Use negotiator and intl-localematcher to get best locale
+  let languages = new Negotiator({ headers: negotiatorHeaders }).languages(
+    locales,
+  );
+
+  const locale = match(languages, locales, i18n.defaultLocale);
+
+  return locale;
+};
+
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
   
-    // @ts-ignore locales are readonly
-    const locales: string[] = i18n.locales;
+  const pathnameHasLocale = i18n.locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
+  if (pathnameHasLocale) return;
   
-    // Use negotiator and intl-localematcher to get best locale
-    let languages = new Negotiator({ headers: negotiatorHeaders }).languages(
-      locales,
-    );
+  const segments = pathname.split('/');
+  const potentialLocale = segments[1] as Locale;
+  const pathWithoutLocale = i18n.locales.includes(potentialLocale) ? `/${segments.slice(2).join('/')}` : pathname;
   
-    const locale = match(languages, locales, i18n.defaultLocale);
-  
-    return locale;
+  // Check if the path is for static assets
+  if (pathWithoutLocale.startsWith('/icons') || pathWithoutLocale.startsWith('/imgs') ) {
+    return;
   }
-  export function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
-    
-    const pathnameHasLocale = i18n.locales.some(
-      (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-    );
-    if (pathnameHasLocale) return;
-    
-    const segments = pathname.split('/');
-    const potentialLocale = segments[1] as Locale;
-    const pathWithoutLocale = i18n.locales.includes(potentialLocale) ? `/${segments.slice(2).join('/')}` : pathname;
-    
-    // Check if the path is for static assets
-    if (pathWithoutLocale.startsWith('/icons') || pathWithoutLocale.startsWith('/imgs')) {
-      return;
-    }
-    console.log("Current pathname:", pathname);
-    
-    // Check if there is any supported locale in the pathname
-    const pathnameIsMissingLocale = i18n.locales.every(
-      (locale) =>
-        !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
-    );
+  console.log("Current pathname:", pathname);
   
-    // Redirect if there is no locale
-    if (pathnameIsMissingLocale) {
-      const locale = getLocale(request);
-  
-      // e.g. incoming request is /products
-      // The new URL is now /en-US/products
-      return NextResponse.redirect(
-        new URL(
-          `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
-          request.url,
-        ),
-      );
-    }
+  // Check if there is any supported locale in the pathname
+  const pathnameIsMissingLocale = i18n.locales.every(
+    (locale) =>
+      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
+  );
+
+  // Redirect if there is no locale
+  if (pathnameIsMissingLocale) {
+    const locale = getLocale(request);
+
+    // e.g. incoming request is /products
+    // The new URL is now /en/products
+    return NextResponse.redirect(
+      new URL(
+        `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
+        request.url,
+      ),
+    );
   }
-  
- 
+}
+
+
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image).*)"],
+  matcher: ["/((?!api|_next/static|_next/image).*)"],
 }
 
 

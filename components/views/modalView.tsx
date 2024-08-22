@@ -1,6 +1,7 @@
 import Image from "next/image"
 import React from "react";
 import { SendEmailSignIn } from "@/components/auth/emailAuth";
+import { redirect } from "next/navigation";
 
 const DefaultModal = ({children, isOpen, setIsOpen}: {children: React.ReactNode; isOpen: boolean; setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;}) => {
 
@@ -18,10 +19,23 @@ const DefaultModal = ({children, isOpen, setIsOpen}: {children: React.ReactNode;
 };
 
 export function SignInModal ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>}) {
-    const [signUp, setSignUp] = React.useState(true);
     const [email, setEmail] = React.useState("");
-    // const [isOpen, setIsOpen] = React.useState<boolean>(false);
+    const [emailSent, setEmailSent] = React.useState(false);
     
+    const emailSignInHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+
+      SendEmailSignIn(email).then((value:string) => {
+        if (value === "Sent") {
+          setEmailSent(true);
+        } else {
+          setEmailSent(false)
+        }
+      }).catch((err:string) => {
+        window.alert(err);
+      })
+    }
+
     return(<DefaultModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <Image src="/icons/logo-full.png" width={166} height={40} alt="Referlink" />
         <h2 className="text-3xl font-semibold">레퍼링크 시작하기</h2>
@@ -37,9 +51,12 @@ export function SignInModal ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: R
             value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         
-        <button
+        {emailSent ? <button 
+          className="w-[84%] text-blue-500 bg-white py-2 px-[8%] rounded-md"
+          onClick={() => window.alert("이메일을 확인해주세요")}> 이메일 전송 완료! </button> 
+        : <button
           className="w-[84%] bg-blue-500 text-white py-2 px-[8%] rounded-md hover:bg-blue-600 transition duration-300"
-          onClick={() => SendEmailSignIn(email)}> 이메일로 간편 로그인 </button>
+          onClick={() => SendEmailSignIn(email)}> 이메일로 간편 로그인 </button>}
 
         <div className="mt-6 w-[84%]">
           <div className="relative">
@@ -55,7 +72,7 @@ export function SignInModal ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: R
         </div>
         
         <button
-          className="mt-6 w-[84%] border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 transition duration-300 flex items-center justify-center"
+          className="mt-6 mb-8 w-[84%] border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 transition duration-300 flex items-center justify-center"
           onClick={() => {/* Implement your Google login logic here */}}>
           <Image src="/google-logo.png" alt="Google Logo" width={20} height={20} className="mr-2" />
           Kakao 로그인
@@ -63,7 +80,6 @@ export function SignInModal ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: R
 
         {/* <EmailAuthForm showSignContainer={showSignContainer} signUp={signUp} styles={styles} />
         <GoogleAuthButton showSignContainer={showSignContainer} styles={styles} /> */}
-        <button className="" onClick={() => setSignUp(!signUp)}>{signUp ? "이미 계정이 있으신가요? Log in" : "Not on Eatsreal yet? Sign up"}</button>
     </DefaultModal>)
 }
 

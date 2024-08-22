@@ -1,19 +1,20 @@
 import { getAdditionalUserInfo, getAuth, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
+import { app } from "../config/firebaseConfig";
 
 export async function SendEmailSignIn (email: string): Promise<string> {
-  const auth = getAuth();
+  const auth = getAuth(app);
 
     const actionCodeSettings = {
       // As it is just a client side <-> Firebase authentication, airtbale involves once the user succeds the URL below.
         // URL you want to redirect back to. The domain (www.example.com) for this
-        url: 'https://referlink.vercel.app/signup?email=' + auth.currentUser?.email,
+        url: 'https://referlink.vercel.app/signup?email=' + email,
         handleCodeInApp: true,
     };
     
     try {
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
       window.localStorage.setItem('emailForSignIn', email);
-      return "Email sent";
+      return "Sent";
     }
     catch(error: any) {
       const errorCode = error.code;
@@ -21,11 +22,6 @@ export async function SendEmailSignIn (email: string): Promise<string> {
       // ...
       return errorMessage as string;
     };
-};
-
-
-export function EmailSignOut () {
-  return "signed out";
 };
 
 interface EmailSignInInfo {
@@ -36,7 +32,7 @@ interface EmailSignInInfo {
 
 // Used in /signup?email=whatever@gmail.com
 export async function emailSignIn (): Promise<EmailSignInInfo> {
-  const auth = getAuth();
+  const auth = getAuth(app);
   if (isSignInWithEmailLink(auth, window.location.href)) {
   // Additional state parameters can also be passed via URL.
   // This can be used to continue the user's intended action before triggering
@@ -62,8 +58,6 @@ export async function emailSignIn (): Promise<EmailSignInInfo> {
         const asdfl = getAdditionalUserInfo(result);
         if (asdfl?.isNewUser) {
           // Airtable
-          const profileInfo = asdfl?.profile;
-    
           return {
             status: 2,
             message: "New",

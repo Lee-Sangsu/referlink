@@ -3,39 +3,52 @@ import { emailSignIn } from "@/components/auth/emailAuth";
 import { getDictionary } from "@/components/get-dictionary";
 import { Locale } from "@/i18nConfig";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
+import { createSession } from "../lib/session";
 
 
 export default async function FinishAuth({
     params: { lang }
 }: {params: { lang: Locale }}) {
-    const dictionary = await getDictionary(lang);
-    // const searchParams = useSearchParams();
+  const dictionary = await getDictionary(lang);
+  
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
-    // const email = searchParams.get("email");
+  const signInInfo = await emailSignIn();
+  
+  async function setUserLoggedIn () {
+    await createSession(email!);
+  };
 
-    const signInInfo = await emailSignIn();
 
-    // const isNewUser = airtable.user.query(email) === empty or exists
-    switch (signInInfo.status) {
-      case 1:
-        // Not login on same device
-        return 
-        break;
-      case 2:
-        // New user
-        break;
-      case 3: 
-        // Existing user
-        break;
-      case 4: 
-        // Some error
-        break;
-      default:
-        break;
-    }
   return (
     <main className="flex min-h-screen w-screen flex-col items-center justify-between p-24">
+      {(() => {
+        switch (signInInfo.status) {
+          case 1:
+            // Not login on same device
+            return (<div>
+              로그인 시도한 디바이스에서 로그인을 완료해주세요.
+            </div>)
+          case 2:
+            // New user
+
+            return (<div>
+              회원가입 추가 입력 정보 받아서 에어테이블로 넘기기 
+            </div>)
+          case 3: 
+            // Existing user -> return to the references page
+            setUserLoggedIn().then(() => {
+              return redirect('/');
+            }).catch
+          case 4: 
+            // Some error
+            return (<h1>에러 발생!</h1>)
+          default:
+            break;
+        } 
+      })()}
       {/* {email && <div>Invalid Access</div>}
       { isNewUser ? <div>
         {"회원가입 동의 + 추가 정보 받기 -> airtable에 정보 넣어"}

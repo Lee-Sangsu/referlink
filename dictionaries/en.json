@@ -8,7 +8,8 @@
           "title": "Menu",
           "menu1": "Blog",
           "menu2": "Contact us"
-      }
+      },
+      "profile": "My profile"
   },
     "counter": {
       "increment": "Increment",

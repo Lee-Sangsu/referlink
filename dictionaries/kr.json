@@ -5,10 +5,11 @@
     "locale": "한국어",
     "header-component": {
         "menu": {
-            "title": "메뉴",
-            "menu1": "블로그",
-            "menu2": "컨택 어스"
-        }
+          "title": "메뉴",
+          "menu1": "내가 받은 평판",
+          "menu2": "내가 작성한 평판"
+        },
+        "profile": "마이페이지"
     },
     "counter": {
       "increment": "Increment",
